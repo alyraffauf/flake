@@ -1,0 +1,3 @@
+_: {
+  flake.overlays.default = {};
+}

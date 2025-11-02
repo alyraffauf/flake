@@ -1,0 +1,12 @@
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+jobs: {}
+name: build-nixos
+'on':
+  push:
+    paths-ignore:
+    - '**/*.md'
+    - .github/**
+    - _img/**
+  workflow_dispatch: {}

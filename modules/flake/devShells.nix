@@ -1,0 +1,29 @@
+_: {
+  perSystem = {
+    config,
+    lib,
+    pkgs,
+    self',
+    ...
+  }: {
+    devShells.default = pkgs.mkShell {
+      packages =
+        (with pkgs; [
+          just
+        ])
+        ++ lib.attrValues config.treefmt.build.programs
+        ++ [
+          self'.packages.gen-files
+        ];
+
+      shellHook = ''
+        echo "Installing pre-commit hooks..."
+        ${config.pre-commit.installationScript}
+        echo "Generating files..."
+        ${lib.getExe self'.packages.gen-files}
+        export FLAKE="." NH_FLAKE="."
+        echo "👋 Welcome to the nixcfg devShell!"
+      '';
+    };
+  };
+}
