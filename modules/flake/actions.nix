@@ -34,7 +34,7 @@
                 runs-on = "ubuntu-latest";
                 steps = [
                   {
-                    uses = "actions/checkout@main";
+                    uses = "actions/checkout@v5";
                     "with" = {fetch-depth = 1;};
                   }
                   {uses = "DeterminateSystems/nix-installer-action@main";}
@@ -53,7 +53,7 @@
                 runs-on = "ubuntu-latest";
                 steps = [
                   {
-                    uses = "actions/checkout@main";
+                    uses = "actions/checkout@v5";
                     "with" = {fetch-depth = 1;};
                   }
                   {uses = "DeterminateSystems/nix-installer-action@main";}
@@ -95,7 +95,7 @@
       #         steps = [
       #           {
       #             name = "Checkout";
-      #             uses = "actions/checkout@main";
+      #             uses = "actions/checkout@v5";
       #             "with" = {fetch-depth = 1;};
       #           }
       #           {
@@ -142,7 +142,7 @@
                 }
                 {
                   name = "Checkout";
-                  uses = "actions/checkout@main";
+                  uses = "actions/checkout@v5";
                   "with" = {fetch-depth = 1;};
                 }
                 {
@@ -189,7 +189,7 @@
                 }
                 {
                   name = "Checkout";
-                  uses = "actions/checkout@main";
+                  uses = "actions/checkout@v5";
                   "with" = {fetch-depth = 1;};
                 }
                 {
@@ -228,7 +228,7 @@
             runs-on = "ubuntu-latest";
             steps = [
               {
-                uses = "actions/checkout@main";
+                uses = "actions/checkout@v5";
                 "with" = {fetch-depth = 1;};
               }
               {uses = "DeterminateSystems/nix-installer-action@main";}
