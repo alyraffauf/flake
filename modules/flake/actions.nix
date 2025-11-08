@@ -69,9 +69,9 @@
           devShellJobs // packageJobs;
       };
 
-      # # build-darwin.yml
-      # ".github/workflows/build-darwin.yml" = {
-      #   name = "build-darwin";
+      # # build-home-manager.yml
+      # ".github/workflows/build-home-manager.yml" = {
+      #   name = "build-home-manager";
       #   concurrency = {
       #     cancel-in-progress = true;
       #     group = "\${{ github.workflow }}-\${{ github.ref }}";
@@ -88,28 +88,46 @@
       #   };
       #   jobs =
       #     lib.mapAttrs'
-      #     (hostname: _: {
-      #       name = "build-${hostname}";
+      #     (hostname: config: let
+      #       # Auto-detect system from the home configuration
+      #       inherit (config.pkgs.stdenv.hostPlatform) system;
+      #       # Map system to appropriate runner
+      #       runner =
+      #         if lib.hasInfix "darwin" system
+      #         then "macos-latest"
+      #         else if system == "aarch64-linux"
+      #         then "ubuntu-24.04-arm"
+      #         else "ubuntu-latest";
+      #       # Only include free disk space step for ubuntu x86_64
+      #       needsFreeDiskSpace = system == "x86_64-linux";
+      #     in {
+      #       name = "build-${lib.replaceStrings ["@"] ["-"] hostname}";
       #       value = {
-      #         runs-on = "macos-latest";
-      #         steps = [
-      #           {
-      #             name = "Checkout";
-      #             uses = "actions/checkout@v5";
-      #             "with" = {fetch-depth = 1;};
-      #           }
-      #           {
-      #             name = "Install Nix";
-      #             uses = "DeterminateSystems/nix-installer-action@main";
-      #           }
-      #           {
-      #             name = "Build ${hostname}";
-      #             run = "nix build --accept-flake-config --print-out-paths .#darwinConfigurations.${hostname}.config.system.build.toplevel";
-      #           }
+      #         runs-on = runner;
+      #         steps = lib.flatten [
+      #           (lib.optional needsFreeDiskSpace {
+      #             name = "Free Disk Space (Ubuntu)";
+      #             uses = "jlumbroso/free-disk-space@main";
+      #           })
+      #           [
+      #             {
+      #               name = "Checkout";
+      #               uses = "actions/checkout@v5";
+      #               "with" = {fetch-depth = 1;};
+      #             }
+      #             {
+      #               name = "Install Nix";
+      #               uses = "DeterminateSystems/nix-installer-action@main";
+      #             }
+      #             {
+      #               name = "Build ${hostname}";
+      #               run = "nix build --accept-flake-config --print-out-paths .#homeConfigurations.${hostname}.activationPackage";
+      #             }
+      #           ]
       #         ];
       #       };
       #     })
-      #     self.darwinConfigurations;
+      #     self.homeConfigurations;
       # };
 
       # build-nixos.yml
