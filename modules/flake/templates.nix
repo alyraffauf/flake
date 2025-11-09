@@ -1,7 +1,7 @@
 {self, ...}: {
   flake = {
     templates.default = {
-      path = self;
+      path = self.outPath;
       description = "Fully-features flake template with batteries included.";
 
       welcomeText = ''
